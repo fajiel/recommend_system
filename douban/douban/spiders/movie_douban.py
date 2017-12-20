@@ -18,6 +18,8 @@ class DoubanSpider(scrapy.Spider):
             return
         movie_type = TYPE_SETTINGS.get(type_num[0])
         element_list = json.loads(response.body)
+        # 语料库中25%作为测试数据
+        test_num = len(element_list) * 0.25
         for element in element_list:
             item = DoubanItem()
             item['title'] = element.get('title')
@@ -31,4 +33,6 @@ class DoubanSpider(scrapy.Spider):
             item['mid'] = element.get('id')
             item['release_date'] = element.get('release_date')
             item['rank'] = str(element.get('rank')) if element.get('rank') else ''
+            item['property'] = '1' if test_num >= 0 else '0'
+            test_num -= 1
             yield item

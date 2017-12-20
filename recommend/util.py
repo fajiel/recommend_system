@@ -12,6 +12,28 @@ CORPUS_TYPE_SETTINGS = {
     '武侠': 26, '古装': 27, '运动': 28, '黑色电影': 29
 }
 
+def check_label(usr_label):
+    if not isinstance(usr_label, list):
+        usr_label = usr_label.split("|")
+    label_ok = True
+    for tmp_label in usr_label:
+        if tmp_label not in CORPUS_TYPE_SETTINGS:
+            label_ok = False
+            break
+    return label_ok
+
 def get_message(id):
     query = session.query(Douban)
     return query.filter_by(id=id).first()
+
+def get_accuracy_datasets():
+    query = session.query(Douban)
+    #获取测试数据
+    query_obj_list = query.filter_by(property='1').all()
+    corpus_list = []
+    labels = []
+    for query_obj in query_obj_list:
+        types = query_obj.types
+        corpus_list.append(types.split("|"))
+        labels.append(query_obj.movie_type)
+    return corpus_list, labels

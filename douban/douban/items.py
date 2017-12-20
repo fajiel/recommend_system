@@ -20,3 +20,4 @@ class DoubanItem(scrapy.Item):
     mid = scrapy.Field()
     release_date = scrapy.Field()
     rank = scrapy.Field()
+    property = scrapy.Field()

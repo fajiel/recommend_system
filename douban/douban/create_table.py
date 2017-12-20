@@ -26,6 +26,7 @@ class Tmp(Base):
     mid = Column(String(64))
     release_date = Column(String(32))
     rank = Column(String(8))
+    property = Column(String(2))
 
 
 if __name__ =='__main__':
