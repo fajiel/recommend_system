@@ -11,37 +11,39 @@ def get_usr_label(usr_label):
         array_list[type_index] = 1
     return array_list
 
-def get_recommend_type(array_list):
+def get_recommend_type(array_list, all_corpus_list, all_labels):
     all_k = 3
-    all_corpus_list, all_labels = get_datasets(CORPUS_TYPE_SETTINGS)
     recommend_type = classify(array_list, all_corpus_list, all_labels, all_k)
     return recommend_type
 
-def get_recommend_id(array_list, recommend_type):
+def get_recommend_id(array_list, recommend_type, type_datasets_dict):
     type_k = 2
-    type_corpus_list, type_labels = get_type_datasets(CORPUS_TYPE_SETTINGS, recommend_type)
+    type_corpus_list = type_datasets_dict.get(recommend_type, {}).get("corpus_array")
+    type_labels = type_datasets_dict.get(recommend_type, {}).get("labels")
     recommend_id = classify(array_list, type_corpus_list, type_labels, type_k)
     return recommend_id
 
-def recommend_movie(usr_label):
+def recommend_movie(usr_label, all_corpus_list, all_labels, type_datasets_dict):
     array_list = get_usr_label(usr_label)
-    recommend_type = get_recommend_type(array_list)
-    recommend_id = get_recommend_id(array_list, recommend_type)
-    query_obj = get_message(recommend_id)
-    return recommend_type, recommend_id, query_obj
+    recommend_type = get_recommend_type(array_list, all_corpus_list, all_labels)
+    recommend_id = get_recommend_id(array_list, recommend_type, type_datasets_dict)
+    return recommend_type, recommend_id
 
 def main():
     # usr_label支持两种数据结构：
     #       1."喜剧|动画",
     #       2.['喜剧','黑色电影']
 
+    all_corpus_list, all_labels = get_datasets(CORPUS_TYPE_SETTINGS)
+    type_datasets_dict = get_type_datasets(CORPUS_TYPE_SETTINGS)
     while True:
         print(u"请输入用户标签：")
         usr_label = input()
         if not check_label(usr_label):
             print(u"用户标签存在异常，请重新输入！")
             continue
-        recommend_type, recommend_id, query_obj = recommend_movie(usr_label)
+        recommend_type, recommend_id = recommend_movie(usr_label, all_corpus_list, all_labels, type_datasets_dict)
+        query_obj = get_message(recommend_id)
         print("****新用户标签****:", usr_label)
         print("****推荐电影类别****:", recommend_type)
         print("****推荐电影标签****:", query_obj.types)

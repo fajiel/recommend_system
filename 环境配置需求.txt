@@ -1,0 +1,14 @@
+﻿软件环境：
+1.python3.6.2(64位)
+2.Mysql(链接：https://pan.baidu.com/s/1i4LXZDF 密码：60ej)
+3.Navicat 数据库管理软件(链接：https://pan.baidu.com/s/1skB8uTn 密码：5tvt)
+
+Python库：
+1.scrapy(链接：https://pan.baidu.com/s/1hrHqwAS 密码：byiz)
+2.urllib
+3.json
+4.sqlalchemy
+5.sklearn(链接：https://pan.baidu.com/s/1pL84MmR 密码：8nkb)
+	第一步：numpy-1.13.1+mkl-cp27-cp27m-win_amd64.whl,
+	第二步：scipy-0.19.1-cp27-cp27m-win_amd64.whl，
+	第三步：scikit_learn-0.18.2-cp27-cp27m-win_amd64.whl

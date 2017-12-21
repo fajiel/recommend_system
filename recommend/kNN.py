@@ -21,26 +21,31 @@ def get_datasets(CORPUS_TYPE_SETTINGS):
         labels.append(query_obj.movie_type)
     return array(corpus_list), labels
 
-def get_type_datasets(CORPUS_TYPE_SETTINGS, movie_type):
+def get_type_datasets(CORPUS_TYPE_SETTINGS):
     start_list = [0]*len(CORPUS_TYPE_SETTINGS)
     type_list = list(CORPUS_TYPE_SETTINGS.keys())
-    query = session.query(Douban)
-    query_obj_list = query.filter_by(movie_type=movie_type, property='0').all()
-    corpus_list = []
-    labels = []
-    for query_obj in query_obj_list:
-        array_list = start_list.copy()
-        types = query_obj.types
-        type_value = 1
-        for tmp_type in types.split("|"):
-            type_index = type_list.index(tmp_type)
-            array_list[type_index] = type_value
-            type_value += 1
-        if len(types.split("|")) != len(array_list) - array_list.count(0):
-            print("----error----")
-        corpus_list.append(array_list)
-        labels.append(query_obj.id)
-    return array(corpus_list), labels
+    type_datasets_dict = {}
+    for movie_type in type_list:
+        type_datasets_dict.setdefault(movie_type, {})
+        query = session.query(Douban)
+        query_obj_list = query.filter_by(movie_type=movie_type, property='0').all()
+        corpus_list = []
+        labels = []
+        for query_obj in query_obj_list:
+            array_list = start_list.copy()
+            types = query_obj.types
+            type_value = 1
+            for tmp_type in types.split("|"):
+                type_index = type_list.index(tmp_type)
+                array_list[type_index] = type_value
+                type_value += 3
+            if len(types.split("|")) != len(array_list) - array_list.count(0):
+                print("----error----")
+            corpus_list.append(array_list)
+            labels.append(query_obj.id)
+        type_datasets_dict[movie_type].setdefault("corpus_array", array(corpus_list))
+        type_datasets_dict[movie_type].setdefault("labels", labels)
+    return type_datasets_dict
 
 def classify(input, corpus_list, labels, k):
     data_size = corpus_list.shape[0]
